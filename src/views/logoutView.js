@@ -1,12 +1,21 @@
-import { render, html } from "../../lib/lit-html.js";
+import page from "../../lib/page.js";
+import { logout } from "../api/usersApi.js";
+import { clearUserData } from "../utils/userUtils.js";
 
-const template = () => html`
-    <h1>Logout page</h1>
-`;
+
+
 
 export default async function logoutView(ctx) {
-    //TODO: Implement this view
+    //TODO: Check if the user is logged in
+    try {
+        await logout();
+        clearUserData();
+        page.redirect('/');
 
-    render(template());
+    } catch (error) {
+        console.log(error.message);
+        
+    }
+
 
 }
