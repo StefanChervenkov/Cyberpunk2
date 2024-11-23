@@ -1,4 +1,5 @@
 import page from "../lib/page.js";
+import { navigationMiddleware } from "./middlewares/navigationMiddleware.js";
 import createView from "./views/createView.js";
 import dashboardView from "./views/dashboardView.js";
 import detailsView from "./views/detailsView.js";
@@ -8,7 +9,11 @@ import logoutView from "./views/logoutView.js";
 import registerView from "./views/registerView.js";
 
 
+//Middlewares
+page(navigationMiddleware);
 
+
+//Routes
 page('/', homeView);
 page('/login', loginView);
 page('/register', registerView);
