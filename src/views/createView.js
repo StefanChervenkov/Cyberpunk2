@@ -1,10 +1,12 @@
 import { render, html } from "../../lib/lit-html.js";
+import page from "../../lib/page.js";
+import { create } from "../api/itemsApi.js";
 
-const template = () => html`
+const template = (onSubmit) => html`
      <section id="create">
         <div class="form form-item">
           <h2>Share Your item</h2>
-          <form class="create-form">
+          <form @submit=${onSubmit} class="create-form">
             <input type="text" name="item" id="item" placeholder="Item" />
             <input type="text" name="imageUrl" id="item-image" placeholder="Your item Image URL" />
             <input type="text" name="price" id="price" placeholder="Price in Euro" />
@@ -21,6 +23,24 @@ const template = () => html`
 export default async function createView(ctx) {
     //TODO: Implement this view
 
-    render(template());
+    render(template(createFormSubmitHandler));
 
+}
+
+async function createFormSubmitHandler(e) {
+    e.preventDefault();
+    const formData = new FormData(e.currentTarget);
+    const data = Object.fromEntries(formData);
+
+    if (Object.values(data).some(value => value == '')) {
+        return alert('All fields are required!')
+    }
+
+    try {
+        await create(data);
+        page.redirect('/dashboard');
+    } catch (error) {
+        alert(error.message)
+    }
+    
 }

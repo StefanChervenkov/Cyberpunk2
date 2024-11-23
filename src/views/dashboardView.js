@@ -13,7 +13,7 @@ const template = (items) => html`
                 <p class="availability">${item.availability}</p>
                 <p class="type">Type: ${item.type}</p>
             </div>
-            <a class="details-btn" href="/details">Uncover More</a>
+            <a class="details-btn" href=${`/dashboard/${item._id}/details`}>Uncover More</a>
         </div>`)}   
 
     ${items.length == 0 ? html`

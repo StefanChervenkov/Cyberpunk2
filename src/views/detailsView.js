@@ -1,41 +1,45 @@
 import { render, html } from "../../lib/lit-html.js";
+import { getOne } from "../api/itemsApi.js";
+import { getUserData } from "../utils/userUtils.js";
 
-const template = () => html`
+const template = (item, isOwner) => html`
     <section id="details">
         <div id="details-wrapper">
           <div>
-            <img id="details-img" src="./images/drone.png" alt="example1" />
-            <p id="details-title">Drone</p>
+            <img id="details-img" src=${item.imageUrl} alt=${item.item} />
+            <p id="details-title">${item.item}</p>
           </div>
           <div id="info-wrapper">
             <div id="details-description">
-              <p class="details-price">Price: €1200</p>
+              <p class="details-price">Price: €${item.price}</p>
               <p class="details-availability">
-                Mass-Market Retail, Online Marketplace
+                ${item.availability}
               </p>
-              <p class="type">Type: Advanced Surveillance</p>
-              <p id="item-description">
-                The Sky Seeker is an invaluable tool for exploration and
-                surveillance. Its compact size and maneuverability make it
-                ideal for navigating tight spaces and gathering data, while
-                its high-resolution cameras provide clear images even in
-                low-light conditions. With the Sky Seeker, you can stay ahead
-                of the curve in the ever-changing world of cyberpunk.
-              </p>
+              <p class="type">Type: ${item.type}</p>
+              <p id="item-description"> ${item.description} </p>
             </div>
-            <!--Edit and Delete are only for creator-->
+            
+            ${isOwner ? html`
             <div id="action-buttons">
-              <a href="" id="edit-btn">Edit</a>
-              <a href="" id="delete-btn">Delete</a>
-            </div>
+              <a href=${`/dashboard/${item._id}/edit`} id="edit-btn">Edit</a>
+              <a href=${`/dashboard/${item._id}/delete`} id="delete-btn">Delete</a>
+            </div>`
+            : html``}
+            
+         
+            
           </div>
         </div>
       </section>
 `;
 
 export default async function detailsView(ctx) {
-    //TODO: Implement this view
+    const itemId = ctx.params.itemId;
+    const item = await getOne(itemId);
 
-    render(template());
+    const userData = getUserData();
+    const isOwner = userData._id === item._ownerId
+
+    render(template(item, isOwner));
 
 } 
